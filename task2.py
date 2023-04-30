@@ -89,10 +89,6 @@ def main():
 
     for model_dict in model_list:
 
-        model = Net(**model_dict)
-
-        model.to(model_device)
-
         num_layers = model_dict['num_layers']
         hidden_size = model_dict['hidden_size']
         activation_func = {nn.Tanh: "tanh", nn.ReLU: "relu", nn.Sigmoid: "sigmoid"}[model_dict['activation']]
@@ -100,9 +96,6 @@ def main():
         for optimizer_func in optimizer_list:
 
             optimizer_fn = {optim.Adam: "Adam", optim.SGD: "SGD"}[optimizer_func]
-
-            criterion = nn.CrossEntropyLoss()
-            optimizer = optimizer_func(params=model.parameters(), lr=learning_rate)
 
             test_losses = torch.zeros([num_splits])
             test_accuracies = torch.zeros([num_splits])
@@ -112,6 +105,13 @@ def main():
             print(f"+{'-'*36:36s}+")
 
             for split_id in range(num_splits):
+
+                model = Net(**model_dict)
+
+                model.to(model_device)
+
+                criterion = nn.CrossEntropyLoss()
+                optimizer = optimizer_func(params=model.parameters(), lr=learning_rate)
 
                 trainset, testset = random_split(mnistset,[0.67,0.33])
 
