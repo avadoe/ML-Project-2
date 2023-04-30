@@ -63,6 +63,9 @@ for train_index, test_index in kf.split(X_train):
                 model.fit(X_cv_train, y_cv_train, batch_size=batch_size, epochs=num_epochs, verbose=0)
                 y_predict = np.argmax(model.predict(X_cv_test), axis=1)
                 accuracy = accuracy_score(np.argmax(y_cv_test, axis=1), y_pred=y_predict)
+                cm = confusion_matrix(np.argmax(y_cv_test, axiss=1), y_pred=y_predict)
+                results.append({'architecture': architecture, 'activation function': activation, 'output function': output_fn, 
+                                'accuracy': accuracy, 'confusion matrix': cm})
             
 for i, result in enumerate(results):
     print(f'Model {i+1}: Architecture={result["architecture"]}, Activation Function={result["activation function"]}, Output Function={result["output function"]},Accuracy={result["accuracy"]:.4f}')
